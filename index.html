@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文本情绪分析系统</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.1.1/dist/tesseract.min.js"></script>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <h1>文本情绪分析系统</h1>
+            
+            <div class="input-section">
+                <div class="input-tabs">
+                    <button class="tab-btn active" data-tab="url">网页分析</button>
+                    <button class="tab-btn" data-tab="text">文本输入</button>
+                    <button class="tab-btn" data-tab="file">文件导入</button>
+                </div>
+                
+                <div class="input-content">
+                    <!-- 网页分析面板 -->
+                    <div class="tab-panel active" id="url-panel">
+                        <div class="url-input-container">
+                            <input type="url" id="urlInput" placeholder="请输入网页URL" />
+                            <p class="hint">支持主流新闻网站的文章页面</p>
+                            <p class="hint warning">注意：某些网页可能需要使用分享链接</p>
+                            
+                            <!-- 将按钮移到这里 -->
+                            <div class="button-group">
+                                <button id="analyzeBtn">分析情绪</button>
+                                <button id="clearBtn" class="clear-btn">清空内容</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 添加网页内容预览区域 -->
+                        <div id="webContentPreview" class="web-content-preview"></div>
+                        
+                        <!-- 添加内容编辑器 -->
+                        <div id="webContentEditor" class="web-content-editor" style="display: none;">
+                            <textarea id="contentEditArea"></textarea>
+                            <div class="editor-actions">
+                                <button onclick="this.parentElement.parentElement.style.display = 'none';">取消</button>
+                                <button onclick="document.getElementById('textInput').value = document.getElementById('contentEditArea').value; this.parentElement.parentElement.style.display = 'none';">确认</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 文本输入面板 -->
+                    <div class="tab-panel" id="text-panel">
+                        <div class="text-input-container">
+                            <textarea id="textInput" placeholder="请输入要分析的文本..."></textarea>
+                            <div class="button-group">
+                                <button id="textAnalyzeBtn" class="analyze-btn">分析情绪</button>
+                                <button id="textClearBtn" class="clear-btn">清空内容</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 文件导入面板 -->
+                    <div class="tab-panel" id="file-panel">
+                        <div class="file-drop-zone" id="dropZone">
+                            <input type="file" id="fileInput" accept=".txt,.doc,.docx,.pdf" title="选择文件" />
+                            <div class="drop-zone-text">
+                                <p>拖放文件到此处或点击上传</p>
+                                <p class="hint">支持 .txt, .doc, .docx, .pdf 格式</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="loadingIndicator" class="loading-indicator hidden">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <div class="results-grid">
+                    <div class="emotion-overview">
+                        <h2>情绪概览</h2>
+                        <div class="emotion-meter">
+                            <div id="emotionBar" class="emotion-bar"></div>
+                        </div>
+                        <p id="mainEmotion">主要情绪: <span></span></p>
+                        <div id="emotionConclusion" class="emotion-conclusion">
+                            <h3>分析结论</h3>
+                            <p class="conclusion-text"></p>
+                        </div>
+                    </div>
+
+                    <div class="detailed-analysis">
+                        <h2>详细分析</h2>
+                        <div class="emotion-stats">
+                            <canvas id="emotionChart"></canvas>
+                        </div>
+                        <div id="keywordsList" class="keywords">
+                            <h3>情感关键词</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
